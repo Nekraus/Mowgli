@@ -18,6 +18,7 @@
 #include "adc.h"
 
 #include <cpp_main.h>
+#include <stl_algo.h>
 #include "panel.h"
 #include "emergency.h"
 #include "drivemotor.h"
@@ -67,7 +68,7 @@
 #include "mower_msgs/HighLevelControlSrv.h"
 #include "mower_msgs/HighLevelStatus.h"
 
-#define MAX_MPS 0.5		  // Allow maximum speed of 0.5 m/s
+#define MAX_MPS 0.6		  // Allow maximum speed of 0.5 m/s
 #define PWM_PER_MPS 300.0 // PWM value of 300 means 1 m/s bot speed
 
 #define TICKS_PER_M 300.0 // Motor Encoder ticks per meter
@@ -204,17 +205,51 @@ extern "C" void CommandHighLevelStatusMessageCb(const mower_msgs::HighLevelStatu
  */
 extern "C" void CommandVelocityMessageCb(const geometry_msgs::Twist &msg)
 {
+	static ros::Time l_old_time;
+	ros::Time l_dt;
+	double l_fSeconddt;
+	float l_fVx;
+	float l_fVz;
+	static float l_foldVx;
+	static float l_foldVz;
+
 	last_cmd_vel = nh.now();
 
-	//	debug_printf("x: %f  z: %f\r\n", msg.linear.x, msg.angular.z);
+	l_dt = last_cmd_vel - l_old_time;
+	l_old_time = last_cmd_vel;
+
+	l_fSeconddt = l_dt.toSec;
+
+	/* Limit max speed */
+	l_fVx = std::clamp(msg.linear.x, -0.5, 0.5);
+	l_fVz = std::clamp(msg.angular.z , -3.2, 3.2);
+
+	/* Limit acceleration */
+	const float dv_min = -0.5 * l_fSeconddt;
+    const float dv_max = 0.1 * l_fSeconddt;
+
+    const float dv = std::clamp(l_fVx - l_foldVx, dv_min, dv_max);
+
+    l_fVx = l_foldVx + dv;
+
+	dv_min = -0.5 * l_fSeconddt;
+    dv_max = 0.5 * l_fSeconddt;
+
+    dv = std::clamp(l_fVz - l_foldVz, dv_min, dv_max);
+
+    l_fVz = l_foldVz + dv;
+	
+	/* keep in memory the valid cmd*/
+	l_foldVx = l_fVx;
+	l_foldVz = l_fVz;
 
 	// calculate twist speeds to add/substract
-	float left_twist_mps = -1.0 * msg.angular.z * WHEEL_BASE * 0.5;
-	float right_twist_mps = msg.angular.z * WHEEL_BASE * 0.5;
+	float left_twist_mps = -1.0 * l_fVz * WHEEL_BASE * 0.5;
+	float right_twist_mps = l_fVz* WHEEL_BASE * 0.5;
 
 	// add them to the linear speed
-	float left_mps = msg.linear.x + left_twist_mps;
-	float right_mps = msg.linear.x + right_twist_mps;
+	float left_mps = l_fVx + left_twist_mps;
+	float right_mps = l_fVx + right_twist_mps;
 
 	// cap left motor speed to MAX_MPS
 	if (left_mps > MAX_MPS)
