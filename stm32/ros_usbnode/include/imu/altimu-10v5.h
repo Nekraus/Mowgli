@@ -4,9 +4,9 @@
 
 /* Calibration, Conversion factors */
 
-#define DS33_G_FACTOR           1.0/(65536/2/2)     // LSM6DS33 datasheet (page 15)  0.061 mg/LSB
-#define DS33_DPS_FACTOR         1.0/(65536/2/245)   // LSM6DS33 °/sec/LSB 
-#define LIS3MDL_GAUSS_FACTOR    1.0/6842            // LIS3MDL datasheet (page8)  Gauss/LSB 
+#define DS33_G_FACTOR           1.0/(65536.0/2.0/2.0)     // LSM6DS33 datasheet (page 15)  0.061 mg/LSB
+#define DS33_DPS_FACTOR         0.00875f   // LSM6DS33 °/sec/LSB 
+#define LIS3MDL_GAUSS_FACTOR    1.0/6842.0            // LIS3MDL datasheet (page8)  Gauss/LSB 
 
 /* Gyro / Accelerometer */
 #define DS33_ADDRESS 0b1101011
