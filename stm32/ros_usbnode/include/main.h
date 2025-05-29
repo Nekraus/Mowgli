@@ -23,7 +23,6 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f_board_hal.h"
-
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -85,7 +84,6 @@ void setBladeMotor(uint8_t on_off);
 uint8_t crcCalc(uint8_t *msg, uint8_t msg_len);
 void msgPrint(uint8_t *msg, uint8_t msg_len);
 void chirp(uint8_t count);
-
 
 extern uint16_t  chargecontrol_pwm_val;
 extern uint8_t   chargecontrol_is_charging;

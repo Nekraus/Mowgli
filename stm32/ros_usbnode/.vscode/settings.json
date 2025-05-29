@@ -1,5 +1,6 @@
 {
     "files.associations": {
+        "*.code-workspace": "makefile",
         "*.cps": "javascript",
         "stm32f1xx_hal_uart.h": "c",
         "ios": "c",
@@ -18,7 +19,8 @@
         "stdbool.h": "c",
         "main.h": "c",
         "mpu6050.h": "c",
-        "wt901.h": "c"
+        "wt901.h": "c",
+        "stm32f_board_hal.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled",
     "stm32-for-vscode.openOCDPath": false,

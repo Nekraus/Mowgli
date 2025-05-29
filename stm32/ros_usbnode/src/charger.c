@@ -247,7 +247,7 @@ void ChargeController(void)
     case CHARGER_STATE_IDLE:
     default:
        
-        if (chargerInputVoltage >= 30.0 ) {
+        if (chargerInputVoltage >= 30.0f ) {
             charger_state = CHARGER_STATE_CONNECTED;
             HAL_GPIO_WritePin(TF4_GPIO_PORT, TF4_PIN, 0); /* Power off the battery  Powerbus */
             timestamp = HAL_GetTick();
@@ -256,9 +256,9 @@ void ChargeController(void)
         break;
     }
     
-    ampere_acc.f += ((current - charge_current_offset.f)/(100*60*60));
-    if(ampere_acc.f >= 2.8)ampere_acc.f = 2.8;
-    SOC = ampere_acc.f/2.8;
+    ampere_acc.f += ((current - charge_current_offset.f)/(100.0f*60.0f*60.0f));
+    if(ampere_acc.f >= 2.8f)ampere_acc.f = 2.8f;
+    SOC = ampere_acc.f/2.8f;
 
     // Writes a data in a RTC Backup data Register 1
     HAL_PWR_EnableBkUpAccess();

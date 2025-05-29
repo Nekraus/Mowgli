@@ -37,6 +37,7 @@ uint8_t lsm6_address = LSM6_SA0_LOW_ADDRESS;
   * @retval          0 -> test failed 1-> test ok, good to init and use
   *
   */
+
 uint8_t LSM6_TestDevice(void)
 {
     uint8_t  val;
@@ -135,7 +136,7 @@ void LSM6_ReadGyroRaw(float *x, float *y, float *z)
     if(acked) {
       *x = (int16_t)(gyro_xyz[1] << 8 | gyro_xyz[0]) * LSM6_DPS_FACTOR * RAD_PER_G;
       *y = (int16_t)(gyro_xyz[3] << 8 | gyro_xyz[2]) * LSM6_DPS_FACTOR * RAD_PER_G;
-      *z = (int16_t)(gyro_xyz[5] << 8 | gyro_xyz[4]) * LSM6_DPS_FACTOR * RAD_PER_G;    
+      *z = (int16_t)(gyro_xyz[5] << 8 | gyro_xyz[4]) * LSM6_DPS_FACTOR * RAD_PER_G;       
     }
 }
 

@@ -31,7 +31,7 @@
 *******************************************************************************/
 #define WT901_ADDRESS 0x50
 
-#define WT901_G_FACTOR 16/32768
+#define WT901_G_FACTOR (16.0f / 32768.0f)
 #define WT901_DPS_FACTOR 2000.0f/32768.0f
 #define WT901_T_FACTOR 0.00000015f    
 
@@ -175,7 +175,7 @@ void WT901_ReadAccelerometerRaw(float *x, float *y, float *z)
 {
     uint8_t accel_xyz[6];   // 2 bytes each
 
-    SW_I2C_UTIL_Read_Multi(WT901_ADDRESS, AX, 6, (uint8_t*)accel_xyz);
+    SW_I2C_UTIL_Read_Multi(WT901_ADDRESS, AX, 6, accel_xyz);
 
     *x =  (float)(int16_t)(accel_xyz[1] << 8 | accel_xyz[0]) * WT901_G_FACTOR * MS2_PER_G;
     *y =  (float)(int16_t)(accel_xyz[3] << 8 | accel_xyz[2]) * WT901_G_FACTOR * MS2_PER_G;
@@ -194,7 +194,7 @@ void WT901_ReadGyroRaw(float *x, float *y, float *z)
     
     *x = (float)(int16_t)(gyro_xyz[1] << 8 | gyro_xyz[0]) * WT901_DPS_FACTOR * RAD_PER_G;
     *y = (float)(int16_t)(gyro_xyz[3] << 8 | gyro_xyz[2]) * WT901_DPS_FACTOR * RAD_PER_G;
-    *z = (float)(int16_t)(gyro_xyz[5] << 8 | gyro_xyz[4]) * WT901_DPS_FACTOR * RAD_PER_G;    
+    *z = (float)(int16_t)(gyro_xyz[5] << 8 | gyro_xyz[4]) * WT901_DPS_FACTOR * RAD_PER_G;     
 }
 
 /**
